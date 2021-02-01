@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "398496903733",
+    "project_id": "gnosis-c1450",
+    "storage_bucket": "gnosis-c1450.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:398496903733:android:d8609ab5abb465eca1377c",
+        "android_client_info": {
+          "package_name": "com.example.gnosis"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "398496903733-5drut0vqpv8n08e648ennrldh2khf7gk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMUAXtaa61MASz9FdQtbcfuM4nfyLYTkw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "398496903733-5drut0vqpv8n08e648ennrldh2khf7gk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

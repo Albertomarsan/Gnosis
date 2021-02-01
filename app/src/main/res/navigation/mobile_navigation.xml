@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.gnosis.ui.home.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/tusPosts"
+        android:name="com.example.gnosis.TusPosts"
+        android:label="Tus posts"
+        tools:layout="@layout/fragment_tus_posts" />
+    <fragment
+        android:id="@+id/favoritos"
+        android:name="com.example.gnosis.Favoritos"
+        android:label="Favoritos"
+        tools:layout="@layout/fragment_favoritos" />
+    <fragment
+        android:id="@+id/categories"
+        android:name="com.example.gnosis.Categories"
+        android:label="Categorías"
+        tools:layout="@layout/fragment_categories" />
+    <fragment
+        android:id="@+id/logout"
+        android:name="com.example.gnosis.Logout"
+        android:label="Cerrar sesión"
+        tools:layout="@layout/fragment_logout" />
+
+</navigation>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/home"
+            android:title="Home" />
+        <item
+            android:id="@+id/tusPosts"
+            android:icon="@drawable/posts"
+            android:title="Tus posts" />
+        <item
+            android:id="@+id/favoritos"
+            android:icon="@drawable/favoritos"
+            android:title="Favoritos" />
+        <item
+            android:id="@+id/categories"
+            android:icon="@android:drawable/ic_dialog_dialer"
+            android:title="Categorías" />
+        <item
+            android:id="@+id/logout"
+            android:icon="@android:drawable/ic_lock_power_off"
+            android:title="Cerrar sesión" />
+    </group>
+</menu>
