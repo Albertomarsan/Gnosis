@@ -1,5 +1,7 @@
 package com.example.gnosis.models;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.List;
 
 public class User {
@@ -14,11 +16,11 @@ public class User {
     private List<Category> categoryList;
     private List<Post> postList;
     private List<Comment> commentList;
+    private FirebaseFirestore db;
 
 
     public User(){
     }
-
 
 
     public long getId() {

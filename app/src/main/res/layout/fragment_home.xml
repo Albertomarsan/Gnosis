@@ -4,12 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="auto"
+    android:focusableInTouchMode="true"
     tools:context=".ui.home.HomeFragment">
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="20pt"
+        android:background="#E3CC05"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,11 +25,10 @@
             android:id="@+id/addPostImage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="3pt"
+            android:layout_marginLeft="60pt"
             android:layout_marginTop="3pt"
-            android:layout_weight="0.12"
+            android:layout_weight="0.099"
             android:adjustViewBounds="false"
-            android:background="#4CAF50"
             app:srcCompat="@mipmap/posticon" />
 
         <TextView
@@ -51,5 +54,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 </androidx.constraintlayout.widget.ConstraintLayout>
