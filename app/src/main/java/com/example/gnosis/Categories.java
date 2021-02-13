@@ -3,6 +3,7 @@ package com.example.gnosis;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -14,18 +15,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.gnosis.models.Category;
 import com.example.gnosis.models.User;
+import com.example.gnosis.models.UserCategories;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -99,7 +112,7 @@ public class Categories extends Fragment {
     }
 
 
-    public void getAllCategories(String userEmail, final View view){
+    public void getAllCategories(final String userEmail, final View view){
 
         bd.collection("UserCategories").whereEqualTo("user_email", userEmail)
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -121,11 +134,12 @@ public class Categories extends Fragment {
                         for(QueryDocumentSnapshot doc: queryDocumentSnapshots){
                             categories.add(doc.toObject(Category.class));
                         }
-                        List<Category> selectedCategories = new ArrayList<>();
+                        final List<Category> selectedCategories = new ArrayList<>();
                         for(int i=0; i<lista.size(); i++){
                             for(int j=0; j<categories.size(); j++){
                                 if((Integer.parseInt(lista.get(i))) == j){
                                     categories.get(j).setSelected(true);
+                                    selectedCategories.add(categories.get(j));
                                 }
                             }
                         }
@@ -156,7 +170,52 @@ public class Categories extends Fragment {
                         setUserCategories.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                //PRIMERO BORRAMOS LAS CATEGORIAS DEL USUARIO SI ESTÁN DESMARCADAS
+                                //PRIMERO BORRAMOS TODAS LAS CATEGORIAS DEL USUARIO GUARDADAS EN LA BD
+                                final CollectionReference ref = bd.collection("UserCategories");
+                                Query query = ref.whereEqualTo("user_email", userEmail)
+                                        .whereIn("category_id", lista);
+                                query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if(task.isSuccessful()){
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                ref.document(document.getId()).delete();
+                                            }
+                                        }
+                                        else{
+                                            Toast.makeText(view.getContext(), "Fallo al actualizar (datos no borrados)", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+
+
+                                //SEGUNDO, AÑADIMOS LAS NUEVAS CATEGORÍAS DELECCIONADAS
+                                List<String> newCategories = new ArrayList<>();
+                                for(int i=0; i<categories.size(); i++){
+                                    if(categories.get(i).isSelected()){
+                                        newCategories.add(String.valueOf(i));
+                                    }
+                                }
+
+
+                                //Date currentDate = Calendar.getInstance().getTime();
+                                //String code = currentDate.toString().replaceAll("\\s","" + String.valueOf(cont));
+                                //int cont = 0;
+                                WriteBatch batch = bd.batch();
+
+                                for(String s : newCategories){
+                                    DocumentReference docRef = bd.collection("UserCategories").document();
+                                    batch.set(docRef, new UserCategories(s, userEmail));
+                                }
+
+                                batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Toast.makeText(view.getContext(), "Categorías actualizadas correctamente", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+
 
                             }
                         });
