@@ -8,6 +8,7 @@ import androidx.preference.PreferenceManager;
 
 import com.example.gnosis.R;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -46,18 +47,15 @@ public class Category {
 
         db = FirebaseFirestore.getInstance();
 
-        db.collection("UserCategories").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        db.collection("UserCategories").whereEqualTo("user_email", userEmail)
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-
-                categoryIdList = new ArrayList<>();
-                for (QueryDocumentSnapshot doc: queryDocumentSnapshots) {
-                    categoryIdList.add(doc.getString("category_id"));
+                for (DocumentSnapshot doc: queryDocumentSnapshots) {
+                    categoryIdList.add((String) doc.get("category_id"));
                 }
-
             }
         });
-
     }
 
 

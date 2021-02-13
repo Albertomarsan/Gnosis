@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private Settings settings = new Settings();
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
+    private Profile profile = new Profile();
 
 
     @Override
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
 
+
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = preferences.edit();
 
@@ -48,6 +50,16 @@ public class MainActivity extends AppCompatActivity {
         TextView txtUsername = (TextView) navigationView.getHeaderView(0).findViewById(R.id.txtUsername);
         txtUsername.setText(preferences.getString(getString(R.string.miUser), ""));
         editor.apply();
+
+        // COGEMOS LA IMAGEN DEL NAVHEADER Y LE AGREGAMOS UN EVENTO
+        ImageView imageProfile = navigationView.getHeaderView(0).findViewById(R.id.profile_image);
+        imageProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.contentNav, profile).commit();
+            }
+        });
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

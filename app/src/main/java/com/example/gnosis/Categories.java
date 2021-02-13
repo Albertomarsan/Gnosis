@@ -84,6 +84,7 @@ public class Categories extends Fragment {
         adaptador = new CategoryAdapter(categories, getContext());
         myRecycler.setAdapter(adaptador);
 
+
         return view;
     }
 

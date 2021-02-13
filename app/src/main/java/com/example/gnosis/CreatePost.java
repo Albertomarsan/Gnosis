@@ -31,6 +31,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -118,6 +119,7 @@ public class CreatePost extends Fragment {
 
     private void createPost() {
 
+        Date currentDate = Calendar.getInstance().getTime();
         String titulo = title.getText().toString();
         String contenido = content.getText().toString();
         String categoria = spinnerCategory.getSelectedItem().toString();
@@ -131,6 +133,7 @@ public class CreatePost extends Fragment {
         map.put("contenido", contenido);
         map.put("categoría", categoria);
         map.put("username", userName);
+        map.put("creado el", currentDate.toString());
         db.collection("Posts").add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {

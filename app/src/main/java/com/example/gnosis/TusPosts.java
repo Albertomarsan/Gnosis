@@ -3,10 +3,17 @@ package com.example.gnosis;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.gnosis.models.Category;
+import com.example.gnosis.models.Post;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +30,11 @@ public class TusPosts extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private RecyclerView myRecycler;
+    private PostAdapter adaptador;
+
+    ArrayList<Post> posts;
 
     public TusPosts() {
         // Required empty public constructor
@@ -59,6 +71,26 @@ public class TusPosts extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tus_posts, container, false);
+        View view = inflater.inflate(R.layout.fragment_tus_posts, container, false);
+
+        myRecycler = view.findViewById(R.id.recycler);
+        myRecycler.setHasFixedSize(true);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        myRecycler.setLayoutManager(layoutManager);
+
+        añadirElementos();
+
+        adaptador = new PostAdapter(posts, getContext());
+        myRecycler.setAdapter(adaptador);
+
+        return view;
+    }
+
+    private void añadirElementos() {
+        posts = new ArrayList<>();
+        Post post = new Post();
+        post.getPostsByUsername(getContext());
+        posts.addAll(post.getPosts());
     }
 }
