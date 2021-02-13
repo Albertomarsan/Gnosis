@@ -1,8 +1,10 @@
 package com.example.gnosis;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,11 +12,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 
 import com.example.gnosis.models.Category;
 import com.example.gnosis.models.User;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,8 +45,9 @@ public class Categories extends Fragment {
 
     private RecyclerView myRecycler;
     private CategoryAdapter adaptador;
-
     ArrayList<Category> categories;
+    private FirebaseFirestore bd;
+    private Button setUserCategories;
 
     public Categories() {
         // Required empty public constructor
@@ -74,29 +86,85 @@ public class Categories extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_categories, container, false);
 
-        myRecycler = view.findViewById(R.id.recycler);
-        myRecycler.setHasFixedSize(true);
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        final SharedPreferences.Editor editor = preferences.edit();
+        String userEmail = preferences.getString(getString(R.string.miEmail), "");
+        editor.apply();
 
-        myRecycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
-
-        añadirElementos();
-
-        adaptador = new CategoryAdapter(categories, getContext());
-        myRecycler.setAdapter(adaptador);
-
+        bd = FirebaseFirestore.getInstance();
+        categories = new ArrayList<>();
+        getAllCategories(userEmail, view);
 
         return view;
     }
 
-    private void añadirElementos() {
-        categories = new ArrayList<>();
 
-        Category category = new Category();
-        category.getCategoriesIdByEmail(getContext());
-        category.getCategoriesById();
+    public void getAllCategories(String userEmail, final View view){
 
-        categories.addAll(category.getMyCategories());
+        bd.collection("UserCategories").whereEqualTo("user_email", userEmail)
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                //OBTENEMOS LOS IDs DE LAS CATEGORÍAS DEL USUARIO
+                final List<String> lista = new ArrayList<>();
+                for (QueryDocumentSnapshot doc: queryDocumentSnapshots) {
+                    lista.add(doc.getString("category_id"));
+                }
 
+
+                //OBTENEMOS LAS CATEGORÍAS ENTERAS A PARTIR DE ESOS IDs
+                DocumentReference docRef;
+
+                bd.collection("Categories").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for(QueryDocumentSnapshot doc: queryDocumentSnapshots){
+                            categories.add(doc.toObject(Category.class));
+                        }
+                        List<Category> selectedCategories = new ArrayList<>();
+                        for(int i=0; i<lista.size(); i++){
+                            for(int j=0; j<categories.size(); j++){
+                                if((Integer.parseInt(lista.get(i))) == j){
+                                    categories.get(j).setSelected(true);
+                                }
+                            }
+                        }
+
+                        myRecycler = view.findViewById(R.id.recyclerCat);
+                        myRecycler.setHasFixedSize(true);
+
+                        myRecycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
+                        adaptador = new CategoryAdapter(categories, getContext());
+                        myRecycler.setAdapter(adaptador);
+
+                        adaptador.setOnItemClickListener(new CategoryAdapter.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(int pos) {
+                                if(categories.get(pos).isSelected()) {
+                                    categories.get(pos).setSelected(false);
+                                    adaptador.notifyItemChanged(pos);
+                                }
+                                else {
+                                    categories.get(pos).setSelected(true);
+                                    adaptador.notifyItemChanged(pos);
+                                }
+                            }
+                        });
+
+                        setUserCategories = view.findViewById(R.id.btnSetUserCategories);
+                        setUserCategories.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                //PRIMERO BORRAMOS LAS CATEGORIAS DEL USUARIO SI ESTÁN DESMARCADAS
+
+                            }
+                        });
+
+                    }
+                });
+            }
+        });
     }
 
 
