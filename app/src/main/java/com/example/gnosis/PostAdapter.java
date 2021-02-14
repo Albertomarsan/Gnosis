@@ -33,10 +33,10 @@ public class PostAdapter extends RecyclerView.Adapter <PostAdapter.MyViewHolder>
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         final PostAdapter.MyViewHolder h = holder;
         final int pos = position;
-        h.title.setText(posts.get(position).getTitle());
-        h.content.setText(posts.get(position).getContent());
-        h.createdAt.setText(posts.get(position).getCreated_at());
-        h.categoryId.setText(posts.get(position).getCategoryId().getNombre()); // puede que falle
+        h.title.setText(posts.get(position).getTitulo());
+        h.content.setText(posts.get(position).getContenido());
+        h.createdAt.setText(posts.get(position).getCreado_el());
+        h.category.setText(posts.get(position).getCategoria());
     }
 
 
@@ -49,7 +49,7 @@ public class PostAdapter extends RecyclerView.Adapter <PostAdapter.MyViewHolder>
         public View myView;
         public TextView title;
         public TextView content;
-        public TextView categoryId;
+        public TextView category;
         public TextView createdAt;
 
         public MyViewHolder(@NonNull View itemView) {
@@ -58,7 +58,7 @@ public class PostAdapter extends RecyclerView.Adapter <PostAdapter.MyViewHolder>
             myView = itemView;
             this.title = itemView.findViewById(R.id.titlePost);
             this.content = itemView.findViewById(R.id.contentPost);
-            this.categoryId = itemView.findViewById(R.id.categoryId);
+            this.category = itemView.findViewById(R.id.categoryId);
             this.createdAt = itemView.findViewById(R.id.createdAt);
         }
     }

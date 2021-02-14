@@ -1,8 +1,11 @@
 package com.example.gnosis;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,6 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.gnosis.models.Post;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -32,7 +39,7 @@ public class TusPosts extends Fragment {
 
     private RecyclerView myRecycler;
     private PostAdapter adaptador;
-
+    private FirebaseFirestore bd;
     ArrayList<Post> posts;
 
     public TusPosts() {
@@ -72,24 +79,42 @@ public class TusPosts extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tus_posts, container, false);
 
-        myRecycler = view.findViewById(R.id.recyclerCat);
-        myRecycler.setHasFixedSize(true);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        myRecycler.setLayoutManager(layoutManager);
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        final SharedPreferences.Editor editor = preferences.edit();
+        String username = preferences.getString(getString(R.string.miUser), "");
+        editor.apply();
 
-        añadirElementos();
-
-        adaptador = new PostAdapter(posts, getContext());
-        myRecycler.setAdapter(adaptador);
+        bd = FirebaseFirestore.getInstance();
+        posts = new ArrayList<>();
+        getPostsByUsername(view, username);
 
         return view;
     }
 
-    private void añadirElementos() {
-        posts = new ArrayList<>();
-        Post post = new Post();
-        post.getPostsByUsername(getContext());
-        posts.addAll(post.getPosts());
+
+    public void getPostsByUsername(final View view, String username) {
+
+        bd = FirebaseFirestore.getInstance();
+        bd.collection("Posts").whereEqualTo("username", username).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (QueryDocumentSnapshot doc: queryDocumentSnapshots) {
+                    posts.add(doc.toObject(Post.class));
+                }
+
+                myRecycler = view.findViewById(R.id.recyclerCat);
+                myRecycler.setHasFixedSize(true);
+
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                myRecycler.setLayoutManager(layoutManager);
+
+                adaptador = new PostAdapter(posts, getContext());
+                myRecycler.setAdapter(adaptador);
+
+            }
+        });
     }
+
+
 }

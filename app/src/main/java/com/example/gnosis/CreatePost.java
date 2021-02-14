@@ -131,9 +131,9 @@ public class CreatePost extends Fragment {
         Map<String, Object> map = new HashMap<>();
         map.put("titulo", titulo);
         map.put("contenido", contenido);
-        map.put("categoría", categoria);
+        map.put("categoria", categoria);
         map.put("username", userName);
-        map.put("creado el", currentDate.toString());
+        map.put("creado_el", currentDate.toString());
         db.collection("Posts").add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
