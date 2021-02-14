@@ -4,31 +4,45 @@ import java.util.Date;
 
 public class Comment {
 
-    private int id;
-    private Post postId;
+    private String id;
+    private String postId;
     private String content;
-    private User userId;
-    private Date createdAt;
+    private String username;
+    private String createdAt;
+    private int userPicture;
 
-    public Comment(Post postId, String content, User userId){
+    public Comment(String postId, String content, String username){
         this.postId = postId;
         this.content = content;
-        this. userId = userId;
+        this. username = username;
     }
 
-    public int getId() {
+    public Comment(){
+    }
+
+
+
+    public int getUserPicture() {
+        return userPicture;
+    }
+
+    public void setUserPicture(int userPicture) {
+        this.userPicture = userPicture;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Post getPostId() {
+    public String getPostId() {
         return postId;
     }
 
-    public void setPostId(Post postId) {
+    public void setPostId(String postId) {
         this.postId = postId;
     }
 
@@ -40,19 +54,19 @@ public class Comment {
         this.content = content;
     }
 
-    public User getUserId() {
-        return userId;
+    public String getUserId() {
+        return username;
     }
 
     public void setUserId(User userId) {
-        this.userId = userId;
+        this.username = username;
     }
 
-    public Date getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 }

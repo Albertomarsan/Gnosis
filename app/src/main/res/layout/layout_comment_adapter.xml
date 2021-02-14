@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="20px"
+    android:layout_marginTop="5dp"
+    android:layout_marginRight="20px"
+    android:background="#DECBE1"
+    android:clipToPadding="false"
+    android:padding="15dp"
+    app:barrierMargin="10dp"
+    app:cardBackgroundColor="#DECBE1"
+    app:cardCornerRadius="12dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="3pt"
+        android:background="#DECBE1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="2pt"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/profilePic_comment"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:adjustViewBounds="false"
+                android:cropToPadding="false"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/avatar" />
+
+            <TextView
+                android:id="@+id/username_comment"
+                android:layout_width="141dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/createdAt_comment"
+                android:layout_width="135dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView"
+                android:textAlignment="center" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/content_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp"
+            android:paddingBottom="10dp"
+            android:text="TextView" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

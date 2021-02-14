@@ -126,7 +126,6 @@ public class Categories extends Fragment {
 
 
                 //OBTENEMOS LAS CATEGORÍAS ENTERAS A PARTIR DE ESOS IDs
-                DocumentReference docRef;
 
                 bd.collection("Categories").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override

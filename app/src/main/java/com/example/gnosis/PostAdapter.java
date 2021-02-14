@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,19 @@ import com.example.gnosis.models.Post;
 import java.util.ArrayList;
 
 public class PostAdapter extends RecyclerView.Adapter <PostAdapter.MyViewHolder> {
+
+    private PostAdapter.OnItemClickListener listener;
+    public interface OnItemClickListener{
+        void onItemClick (int pos);
+        void onDeleteClick (int pos);
+    }
+
+    public void setOnItemClickListener(PostAdapter.OnItemClickListener listener){
+        this.listener = listener;
+    }
+
+
+
     ArrayList <Post> posts;
     Context context;
     public PostAdapter(ArrayList<Post> posts, Context context) {
@@ -26,7 +40,7 @@ public class PostAdapter extends RecyclerView.Adapter <PostAdapter.MyViewHolder>
     public PostAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.layout_post_adapter, parent, false);
-        return new PostAdapter.MyViewHolder(view);
+        return new PostAdapter.MyViewHolder(view, listener);
     }
 
     @Override
@@ -51,8 +65,9 @@ public class PostAdapter extends RecyclerView.Adapter <PostAdapter.MyViewHolder>
         public TextView content;
         public TextView category;
         public TextView createdAt;
+        public ImageView remove;
 
-        public MyViewHolder(@NonNull View itemView) {
+        public MyViewHolder(@NonNull View itemView, final PostAdapter.OnItemClickListener listener) {
             super(itemView);
 
             myView = itemView;
@@ -60,6 +75,32 @@ public class PostAdapter extends RecyclerView.Adapter <PostAdapter.MyViewHolder>
             this.content = itemView.findViewById(R.id.contentPost);
             this.category = itemView.findViewById(R.id.categoryId);
             this.createdAt = itemView.findViewById(R.id.createdAt);
+            this.remove = itemView.findViewById(R.id.remove_post_icon);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(listener != null){
+                        int pos = getAdapterPosition();
+                        if(pos != RecyclerView.NO_POSITION){
+                            listener.onItemClick(pos);
+                        }
+                    }
+                }
+            });
+
+            remove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(listener != null){
+                        int pos = getAdapterPosition();
+                        if(pos != RecyclerView.NO_POSITION){
+                            listener.onDeleteClick(pos);
+                        }
+                    }
+                }
+            });
+
         }
     }
 }

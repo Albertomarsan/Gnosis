@@ -1,10 +1,13 @@
 package com.example.gnosis;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,10 +15,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.gnosis.models.Post;
+import com.example.gnosis.ui.home.HomeFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -41,6 +51,7 @@ public class TusPosts extends Fragment {
     private PostAdapter adaptador;
     private FirebaseFirestore bd;
     ArrayList<Post> posts;
+    private String userName;
 
     public TusPosts() {
         // Required empty public constructor
@@ -79,15 +90,15 @@ public class TusPosts extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tus_posts, container, false);
 
-
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         final SharedPreferences.Editor editor = preferences.edit();
-        String username = preferences.getString(getString(R.string.miUser), "");
+        userName = preferences.getString(getString(R.string.miUser), "");
         editor.apply();
+
 
         bd = FirebaseFirestore.getInstance();
         posts = new ArrayList<>();
-        getPostsByUsername(view, username);
+        getPostsByUsername(view, userName);
 
         return view;
     }
@@ -111,6 +122,52 @@ public class TusPosts extends Fragment {
 
                 adaptador = new PostAdapter(posts, getContext());
                 myRecycler.setAdapter(adaptador);
+
+                adaptador.setOnItemClickListener(new PostAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int pos) {
+                        // Vamos a DetailedPost pasándole el id del post
+
+                        ArrayList<String> postData = new ArrayList<>();
+                        postData.add(posts.get(pos).getUsername());
+                        postData.add(posts.get(pos).getContenido());
+                        postData.add(posts.get(pos).getCreado_el());
+                        //postData.add(posts.get(pos).getCategoria());
+                        postData.add(posts.get(pos).getId());
+                        postData.add(posts.get(pos).getTitulo());
+                        // conseguir el id desde aquí y pasarlo
+
+                        Bundle bundle = new Bundle();
+                        bundle.putStringArrayList("postData", postData);
+
+                        DetailedPost detailedPost = new DetailedPost();
+                        detailedPost.setArguments(bundle);
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                        transaction.replace(((ViewGroup)getView().getParent()).getId(), detailedPost).commit();
+                    }
+
+                    @Override
+                    public void onDeleteClick(final int pos) {
+
+                        final CollectionReference ref = bd.collection("Posts");
+                        Query query = ref.whereEqualTo("id", posts.get(pos).getId());
+                        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if(task.isSuccessful()){
+                                    for (DocumentSnapshot document : task.getResult()) {
+                                        ref.document(document.getId()).delete();
+                                    }
+
+                                    posts.remove(pos);
+                                    adaptador.notifyItemRemoved(pos);
+                                }
+                            }
+                        });
+
+
+                    }
+                });
 
             }
         });

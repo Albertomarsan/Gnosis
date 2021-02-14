@@ -129,6 +129,7 @@ public class CreatePost extends Fragment {
         editor.apply();
 
         Map<String, Object> map = new HashMap<>();
+        map.put("id", currentDate.toString() + "a");
         map.put("titulo", titulo);
         map.put("contenido", contenido);
         map.put("categoria", categoria);

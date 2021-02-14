@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Post {
 
-    private int id;
+    private String id;
     private String titulo;
     private String contenido;
     private String creado_el;
@@ -15,6 +15,7 @@ public class Post {
     private Comment commentId;
     private List<Post> posts;
     private FirebaseFirestore db;
+    private boolean toRemove;
 
     public Post(String titulo, String contenido, String categoria){
         this.titulo = titulo;
@@ -26,6 +27,13 @@ public class Post {
     }
 
 
+    public void toRemove(){
+        this.toRemove = true;
+    }
+
+    public boolean isToRemove() {
+        return toRemove;
+    }
 
     public List<Post> getPosts() {
         return posts;
@@ -35,11 +43,11 @@ public class Post {
         this.posts = posts;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
