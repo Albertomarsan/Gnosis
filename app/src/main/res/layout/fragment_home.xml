@@ -29,7 +29,7 @@
             android:layout_marginTop="3pt"
             android:layout_weight="0.099"
             android:adjustViewBounds="false"
-            app:srcCompat="@mipmap/posticon" />
+            app:srcCompat="@mipmap/iconopost" />
 
         <TextView
             android:id="@+id/txtNewPost"

@@ -30,5 +30,10 @@
         android:name="com.example.gnosis.Logout"
         android:label="Cerrar sesión"
         tools:layout="@layout/fragment_logout" />
+    <fragment
+        android:id="@+id/profile"
+        android:name="com.example.gnosis.Profile"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
 
 </navigation>

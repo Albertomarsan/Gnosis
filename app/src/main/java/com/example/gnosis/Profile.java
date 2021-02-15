@@ -1,14 +1,25 @@
 package com.example.gnosis;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +39,12 @@ public class Profile extends Fragment {
 
     private ImageView profileImage;
     private TextView cambiarImagen, txtUsername, postCount, commentCount;
+    public static final int PICK_IMAGE = 1;
+
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    // Create a storage reference from our app
+    StorageReference storageRef = storage.getReference();
+    StorageReference imagesRef;
 
     public Profile() {
         // Required empty public constructor
@@ -72,6 +89,41 @@ public class Profile extends Fragment {
         postCount = view.findViewById(R.id.postCount);
         commentCount = view.findViewById(R.id.commentCount);
 
+
+        cambiarImagen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                photoPickerIntent.setType("image/*");
+                startActivityForResult(photoPickerIntent, PICK_IMAGE );
+            }
+        });
+
         return view;
     }
+
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (requestCode == PICK_IMAGE) {
+            try {
+
+                final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                final SharedPreferences.Editor editor = preferences.edit();
+                String username = preferences.getString(getString(R.string.miUser), "");
+                editor.apply();
+
+                imagesRef = storageRef.child("images/" + username);
+
+                InputStream inputStream = getContext().getContentResolver().openInputStream(data.getData());
+                UploadTask uploadTask = imagesRef.putStream(inputStream);
+                Toast.makeText(getContext(), "Imagen actualizada", Toast.LENGTH_SHORT).show();
+
+
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
