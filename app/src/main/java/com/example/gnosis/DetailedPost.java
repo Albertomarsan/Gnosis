@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,23 +13,28 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.gnosis.models.Comment;
-import com.example.gnosis.models.Post;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.example.gnosis.ui.home.HomeFragment;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,6 +54,8 @@ public class DetailedPost extends Fragment {
     private RecyclerView myRecycler;
     private CommentAdapter adaptador;
     private FirebaseFirestore bd;
+    private Fragment thisFragment;
+    String username_comment;
 
     // atributos del post
     private TextView title;
@@ -55,6 +63,8 @@ public class DetailedPost extends Fragment {
     private TextView createdAt;
     private TextView content;
     private TextView username;
+    private String post_id;
+    private TextView category_postDetailed;
 
     // atributos sección comentarios
     private ImageView profilePic_comment;
@@ -105,6 +115,7 @@ public class DetailedPost extends Fragment {
         content = view.findViewById(R.id.content_post);
         createdAt = view.findViewById(R.id.created_at_post);
         username = view.findViewById(R.id.username_post);
+        category_postDetailed = view.findViewById(R.id.category_postDetailed);
 
         profilePic_comment = view.findViewById(R.id.profilePic_comment_post);
         editText = view.findViewById(R.id.input_comment);
@@ -114,29 +125,65 @@ public class DetailedPost extends Fragment {
         ArrayList<String> postData;
         postData = bundle.getStringArrayList("postData");
 
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        final SharedPreferences.Editor editor = preferences.edit();
+        username_comment = preferences.getString(getString(R.string.miUser), "");
+        editor.apply();
+
         username.setText(postData.get(0));
         content.setText(postData.get(1));
         createdAt.setText(postData.get(2));
+        post_id = postData.get(3);
         title.setText(postData.get(4));
-
-        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        final SharedPreferences.Editor editor = preferences.edit();
-        String username_comment = preferences.getString(getString(R.string.miUser), "");
-        editor.apply();
+        category_postDetailed.setText(postData.get(5));
 
         bd = FirebaseFirestore.getInstance();
+        thisFragment = this;
+
+        // ENVÍO DE COMENTARIO
+        btnEnviar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String contenido = editText.getText().toString();
+                Map<String, Object> map = new HashMap<>();
+
+                Calendar calendar = Calendar.getInstance();
+                String date;
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                date = dateFormat.format(calendar.getTime());
+
+                map.put("content", contenido);
+                map.put("createdAt", date);
+                map.put("postId", post_id);
+                map.put("userPicture", "");
+                map.put("username", username_comment);
+                bd.collection("Comments").add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Toast.makeText(getContext(), "Se ha enviado con éxito", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), "Error en la conexión a la bd: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
+
         comments = new ArrayList<>();
-        getCommentsByPostId(view, username_comment, postData.get(3));
+        getCommentsByPostId(view, postData.get(3));
 
         return view;
     }
 
-    private void getCommentsByPostId(final View view, String username_comment, String idPost) {
+    private void getCommentsByPostId(final View view, String idPost) {
 
         bd.collection("Comments").whereEqualTo("postId", idPost).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-
                 for (QueryDocumentSnapshot doc: queryDocumentSnapshots) {
                     comments.add(doc.toObject(Comment.class));
                 }

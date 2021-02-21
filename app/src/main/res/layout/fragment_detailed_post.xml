@@ -5,23 +5,27 @@
     android:id="@+id/constraintId"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/AguaMarina"
     tools:context=".DetailedPost">
 
-    <androidx.cardview.widget.CardView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
-        app:cardCornerRadius="10dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#F3E7D5">
+            android:background="@color/MarronClaro">
 
             <LinearLayout
                 android:id="@+id/linearLayout4"
-                android:layout_width="338dp"
-                android:layout_height="138dp"
+                android:layout_width="335dp"
+                android:layout_height="203dp"
                 android:orientation="vertical"
                 android:paddingLeft="15dp"
                 android:paddingTop="8dp"
@@ -50,12 +54,27 @@
 
                 </View>
 
-                <TextView
-                    android:id="@+id/content_post"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="6dp"
-                    android:text="TextView" />
+                <ScrollView
+                    android:layout_width="303dp"
+                    android:layout_height="151dp">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/content_post"
+                            android:layout_width="308dp"
+                            android:layout_height="152dp"
+                            android:paddingTop="6dp"
+                            android:text="TextView"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </ScrollView>
+
             </LinearLayout>
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -87,6 +106,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TextView"
+                android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.84"
@@ -104,8 +124,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/profilePic_post"
-                app:layout_constraintVertical_bias="0.04000002">
-            </View>
+                app:layout_constraintVertical_bias="0.04000002"></View>
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profilePic_comment_post"
@@ -121,16 +140,15 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_comments"
-                android:layout_width="342dp"
-                android:layout_height="288dp"
+                android:layout_width="310dp"
+                android:layout_height="279dp"
                 android:layout_marginTop="10dp"
-                android:textAlignment="inherit"
+                android:textAlignment="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/input_comment"
-                app:layout_constraintVertical_bias="0.104" />
+                app:layout_constraintVertical_bias="0.0" />
 
             <EditText
                 android:id="@+id/input_comment"
@@ -159,10 +177,23 @@
                 app:layout_constraintTop_toBottomOf="@+id/view"
                 app:layout_constraintVertical_bias="0.051" />
 
+            <TextView
+                android:id="@+id/category_postDetailed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textColor="#9C27B0"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@+id/view"
+                app:layout_constraintEnd_toStartOf="@+id/created_at_post"
+                app:layout_constraintStart_toEndOf="@+id/username_post"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
+                app:layout_constraintVertical_bias="0.24000001" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    </androidx.cardview.widget.CardView>
+    </ScrollView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

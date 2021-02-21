@@ -4,55 +4,81 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/AzulClaro"
     android:clickable="true"
-    android:focusable="auto"
+    android:focusable="true"
     android:focusableInTouchMode="true"
     tools:context=".ui.home.HomeFragment">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="20pt"
-        android:background="#E3CC05"
-        android:orientation="horizontal"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/addPostImage"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="60pt"
-            android:layout_marginTop="3pt"
-            android:layout_weight="0.099"
-            android:adjustViewBounds="false"
-            app:srcCompat="@mipmap/iconopost" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/txtNewPost"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="3pt"
-            android:layout_marginTop="6pt"
-            android:layout_weight="1"
-            android:text="Nuevo post"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linearLayout6"
+                android:layout_width="332dp"
+                android:layout_height="49dp"
+                android:background="@color/RosaClaro"
+                android:orientation="horizontal"
+                android:paddingTop="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0">
 
-    <TextView
-        android:id="@+id/text_home"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+                <ImageView
+                    android:id="@+id/addPostImage"
+                    android:layout_width="69dp"
+                    android:layout_height="29dp"
+                    android:layout_marginLeft="45dp"
+                    android:layout_weight="1"
+                    android:src="@mipmap/iconopost"
+                    android:textAlignment="viewEnd" />
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="213dp"
+                    android:layout_height="38dp"
+                    android:layout_weight="1"
+                    android:text="Nuevo post"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/view2"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:background="@color/AzulClaro"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout6"
+                app:layout_constraintVertical_bias="0.01999998">
+
+            </View>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_home"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view2" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

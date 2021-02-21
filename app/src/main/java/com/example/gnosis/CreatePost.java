@@ -30,6 +30,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -128,13 +129,19 @@ public class CreatePost extends Fragment {
         String userName = preferences.getString(getString(R.string.miUser), "");
         editor.apply();
 
+        Calendar calendar = Calendar.getInstance();
+        String date;
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        date = dateFormat.format(calendar.getTime());
+
         Map<String, Object> map = new HashMap<>();
-        map.put("id", currentDate.toString() + "a");
+        map.put("id", titulo + date );
         map.put("titulo", titulo);
         map.put("contenido", contenido);
         map.put("categoria", categoria);
         map.put("username", userName);
-        map.put("creado_el", currentDate.toString());
+        map.put("creado_el", date);
         db.collection("Posts").add(map).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {

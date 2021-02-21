@@ -3,4 +3,13 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+
+    <color name="RojoFucsia">#af0330</color>
+    <color name="AguaMarina">#03af82</color>
+    <color name="MarronRojizo">#af2c03</color>
+    <color name="MarronClaro">#fc8a66</color>
+    <color name="AzulClaro">#8dfde0</color>
+    <color name="RosaClaro">#fd799c</color>
+
+
 </resources>

@@ -20,6 +20,7 @@ public class PostAdapter extends RecyclerView.Adapter <PostAdapter.MyViewHolder>
     public interface OnItemClickListener{
         void onItemClick (int pos);
         void onDeleteClick (int pos);
+        void onEditClick (int pos);
     }
 
     public void setOnItemClickListener(PostAdapter.OnItemClickListener listener){
@@ -48,7 +49,6 @@ public class PostAdapter extends RecyclerView.Adapter <PostAdapter.MyViewHolder>
         final PostAdapter.MyViewHolder h = holder;
         final int pos = position;
         h.title.setText(posts.get(position).getTitulo());
-        h.content.setText(posts.get(position).getContenido());
         h.createdAt.setText(posts.get(position).getCreado_el());
         h.category.setText(posts.get(position).getCategoria());
     }
@@ -62,20 +62,20 @@ public class PostAdapter extends RecyclerView.Adapter <PostAdapter.MyViewHolder>
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public View myView;
         public TextView title;
-        public TextView content;
         public TextView category;
         public TextView createdAt;
         public ImageView remove;
+        public ImageView edit;
 
         public MyViewHolder(@NonNull View itemView, final PostAdapter.OnItemClickListener listener) {
             super(itemView);
 
             myView = itemView;
             this.title = itemView.findViewById(R.id.titlePost);
-            this.content = itemView.findViewById(R.id.contentPost);
             this.category = itemView.findViewById(R.id.categoryId);
             this.createdAt = itemView.findViewById(R.id.createdAt);
             this.remove = itemView.findViewById(R.id.remove_post_icon);
+            this.edit = itemView.findViewById(R.id.edit_post_icon);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -96,6 +96,18 @@ public class PostAdapter extends RecyclerView.Adapter <PostAdapter.MyViewHolder>
                         int pos = getAdapterPosition();
                         if(pos != RecyclerView.NO_POSITION){
                             listener.onDeleteClick(pos);
+                        }
+                    }
+                }
+            });
+
+            edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(listener != null){
+                        int pos = getAdapterPosition();
+                        if(pos != RecyclerView.NO_POSITION){
+                            listener.onEditClick(pos);
                         }
                     }
                 }

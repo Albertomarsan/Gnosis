@@ -2,9 +2,8 @@ package com.example.gnosis.models;
 
 public class UserCategories {
 
-    private int id;
     private String category_id;
-
+    private String user_email;
 
 
     public UserCategories(){
@@ -17,15 +16,6 @@ public class UserCategories {
 
 
 
-
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getCategory_id() {
         return category_id;
@@ -43,7 +33,7 @@ public class UserCategories {
         this.user_email = user_email;
     }
 
-    private String user_email;
+
 
 
 

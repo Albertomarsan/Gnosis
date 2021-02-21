@@ -4,17 +4,16 @@ import java.util.Date;
 
 public class Comment {
 
-    private String id;
     private String postId;
     private String content;
     private String username;
     private String createdAt;
-    private int userPicture;
+    private String userPicture;
 
     public Comment(String postId, String content, String username){
         this.postId = postId;
         this.content = content;
-        this. username = username;
+        this.username = username;
     }
 
     public Comment(){
@@ -22,20 +21,21 @@ public class Comment {
 
 
 
-    public int getUserPicture() {
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUserPicture() {
         return userPicture;
     }
 
-    public void setUserPicture(int userPicture) {
+    public void setUserPicture(String userPicture) {
         this.userPicture = userPicture;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getPostId() {

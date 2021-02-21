@@ -12,16 +12,6 @@ import java.util.ArrayList;
 
 public class CommentAdapter extends RecyclerView.Adapter <CommentAdapter.MyViewHolder> {
 
-    private CommentAdapter.OnItemClickListener listener;
-    public interface OnItemClickListener{
-        void onItemClick (int pos);
-    }
-
-    public void setOnItemClickListener(CommentAdapter.OnItemClickListener listener){
-        this.listener = listener;
-    }
-
-
     ArrayList<Comment> comments;
     Context context;
     public CommentAdapter(ArrayList<Comment> comments, Context context) {
@@ -34,7 +24,7 @@ public class CommentAdapter extends RecyclerView.Adapter <CommentAdapter.MyViewH
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.layout_comment_adapter, parent, false);
-        return new CommentAdapter.MyViewHolder(view, listener);
+        return new CommentAdapter.MyViewHolder(view);
     }
 
     @Override
@@ -43,7 +33,7 @@ public class CommentAdapter extends RecyclerView.Adapter <CommentAdapter.MyViewH
         final int pos = position;
         h.content.setText(comments.get(position).getContent());
         h.createdAt.setText(comments.get(position).getCreatedAt());
-        h.username.setText(comments.get(position).getUserId());
+        h.username.setText(comments.get(position).getUsername());
 
     }
 
@@ -62,7 +52,7 @@ public class CommentAdapter extends RecyclerView.Adapter <CommentAdapter.MyViewH
         public TextView content;
 
 
-        public MyViewHolder(@NonNull View itemView, final CommentAdapter.OnItemClickListener listener) {
+        public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
             myView = itemView;
@@ -71,17 +61,6 @@ public class CommentAdapter extends RecyclerView.Adapter <CommentAdapter.MyViewH
             this.username = itemView.findViewById(R.id.username_comment);
             this.createdAt = itemView.findViewById(R.id.createdAt_comment);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        int pos = getAdapterPosition();
-                        if (pos != RecyclerView.NO_POSITION) {
-                            listener.onItemClick(pos);
-                        }
-                    }
-                }
-            });
 
         }
     }

@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreatePost">
+    android:background="@color/AzulClaro"
+    tools:context=".EditPost">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,22 +12,9 @@
         android:background="@color/AzulClaro"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/catetoriaTxt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Categoría"
-            android:textColor="@color/RojoFucsia"
-            android:textSize="16sp" />
-
-        <Spinner
-            android:id="@+id/spinnerCategory"
-            android:layout_width="227dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5pt" />
 
         <TextView
-            android:id="@+id/titleTxt"
+            android:id="@+id/titleTxt_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Título"
@@ -34,17 +22,17 @@
             android:textSize="16sp" />
 
         <EditText
-            android:id="@+id/inputTitle"
+            android:id="@+id/inputTitle_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5pt"
             android:hint="Título"
             android:inputType="text"
-            android:textColor="#191919"
+            android:textColor="#2E2E2E"
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/contentTxt"
+            android:id="@+id/contentTxt_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Contenido del post"
@@ -56,19 +44,20 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/inputContent"
+                android:id="@+id/inputContent_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Contenido del post"
                 android:lines="6"
-                android:textColor="#121212" />
+                android:textColor="#101010" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/btnCreatePost"
+            android:id="@+id/btnEditPost"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/AguaMarina"
-            android:text="Crear post" />
+            android:text="Guardar cambios"
+            android:textColor="#020202" />
     </LinearLayout>
 </FrameLayout>

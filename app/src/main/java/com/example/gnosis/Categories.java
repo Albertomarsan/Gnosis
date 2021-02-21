@@ -7,21 +7,15 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Toast;
-
 import com.example.gnosis.models.Category;
-import com.example.gnosis.models.User;
 import com.example.gnosis.models.UserCategories;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -32,13 +26,8 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
-
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -136,11 +125,15 @@ public class Categories extends Fragment {
                         final List<Category> selectedCategories = new ArrayList<>();
                         for(int i=0; i<lista.size(); i++){
                             for(int j=0; j<categories.size(); j++){
-                                if((Integer.parseInt(lista.get(i))) == j){
+                                if((Integer.parseInt(lista.get(i))) == j+1){
                                     categories.get(j).setSelected(true);
                                     selectedCategories.add(categories.get(j));
                                 }
                             }
+                        }
+
+                        for(int i=0; i<8; i++){
+                            selectedCategories.add(null);
                         }
 
                         myRecycler = view.findViewById(R.id.recyclerCat);
@@ -157,10 +150,15 @@ public class Categories extends Fragment {
                                 if(categories.get(pos).isSelected()) {
                                     categories.get(pos).setSelected(false);
                                     adaptador.notifyItemChanged(pos);
+                                    for(int i=0; i<lista.size(); i++){
+                                        if(categories.get(pos).equals(selectedCategories.get(i)))
+                                            selectedCategories.remove(i); // si no funciona, probar a setear en false y abajo no meterlas
+                                    }
                                 }
                                 else {
                                     categories.get(pos).setSelected(true);
                                     adaptador.notifyItemChanged(pos);
+
                                 }
                             }
                         });
@@ -169,32 +167,50 @@ public class Categories extends Fragment {
                         setUserCategories.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                //PRIMERO BORRAMOS TODAS LAS CATEGORIAS DEL USUARIO GUARDADAS EN LA BD
-                                final CollectionReference ref = bd.collection("UserCategories");
-                                Query query = ref.whereEqualTo("user_email", userEmail)
-                                        .whereIn("category_id", lista);
-                                query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if(task.isSuccessful()){
-                                            for (DocumentSnapshot document : task.getResult()) {
-                                                ref.document(document.getId()).delete();
+                                //PRIMERO BORRAMOS LOS REGISTROS NO SELECCIONADOS
+                                if(lista.size() > 0) {
+
+                                    List<String> toDeleteCategories = new ArrayList<>();
+                                    for(int i=0; i<categories.size(); i++){
+                                        if(!categories.get(i).isSelected())
+                                            toDeleteCategories.add(String.valueOf(i+1));
+                                    }
+
+                                    final CollectionReference ref = bd.collection("UserCategories");
+                                    Query query = ref.whereEqualTo("user_email", userEmail)
+                                            .whereIn("category_id", toDeleteCategories);
+                                    query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                for (DocumentSnapshot document : task.getResult()) {
+                                                    ref.document(document.getId()).delete();
+                                                }
+                                            } else {
+                                                Toast.makeText(view.getContext(), "Fallo al actualizar (datos no borrados)", Toast.LENGTH_SHORT).show();
                                             }
                                         }
-                                        else{
-                                            Toast.makeText(view.getContext(), "Fallo al actualizar (datos no borrados)", Toast.LENGTH_SHORT).show();
+                                    });
+                                }
+
+                                for(int i=0; i<selectedCategories.size(); i++){
+                                    if(selectedCategories.get(i) != null) {
+                                        for (int j = 0; j < categories.size(); j++) {
+                                            if (selectedCategories.get(i).equals(categories.get(j)))
+                                                categories.get(j).setSelected(false);
                                         }
                                     }
-                                });
+                                }
 
-
-                                //SEGUNDO, AÑADIMOS LAS NUEVAS CATEGORÍAS DELECCIONADAS
+                                //SEGUNDO, AÑADIMOS LAS NUEVAS CATEGORÍAS SELECCIONADAS
                                 List<String> newCategories = new ArrayList<>();
                                 for(int i=0; i<categories.size(); i++){
                                     if(categories.get(i).isSelected()){
-                                        newCategories.add(String.valueOf(i));
+                                        newCategories.add(String.valueOf(i+1));
                                     }
                                 }
+
+
 
 
                                 //Date currentDate = Calendar.getInstance().getTime();
@@ -213,8 +229,6 @@ public class Categories extends Fragment {
                                         Toast.makeText(view.getContext(), "Categorías actualizadas correctamente", Toast.LENGTH_SHORT).show();
                                     }
                                 });
-
-
 
                             }
                         });

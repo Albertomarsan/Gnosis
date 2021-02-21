@@ -132,9 +132,9 @@ public class TusPosts extends Fragment {
                         postData.add(posts.get(pos).getUsername());
                         postData.add(posts.get(pos).getContenido());
                         postData.add(posts.get(pos).getCreado_el());
-                        //postData.add(posts.get(pos).getCategoria());
                         postData.add(posts.get(pos).getId());
                         postData.add(posts.get(pos).getTitulo());
+                        postData.add(posts.get(pos).getCategoria());
                         // conseguir el id desde aquí y pasarlo
 
                         Bundle bundle = new Bundle();
@@ -158,7 +158,6 @@ public class TusPosts extends Fragment {
                                     for (DocumentSnapshot document : task.getResult()) {
                                         ref.document(document.getId()).delete();
                                     }
-
                                     posts.remove(pos);
                                     adaptador.notifyItemRemoved(pos);
                                 }
@@ -167,6 +166,24 @@ public class TusPosts extends Fragment {
 
 
                     }
+
+                    @Override
+                    public void onEditClick(int pos) {
+
+                        ArrayList<String> postEditData = new ArrayList<>();
+                        postEditData.add(posts.get(pos).getContenido());
+                        postEditData.add(posts.get(pos).getTitulo());
+                        postEditData.add(posts.get(pos).getId());
+
+                        Bundle bundle = new Bundle();
+                        bundle.putStringArrayList("postEditData", postEditData);
+
+                        EditPost editPost = new EditPost();
+                        editPost.setArguments(bundle);
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                        transaction.replace(((ViewGroup)getView().getParent()).getId(), editPost).commit();
+                    }
+
                 });
 
             }

@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -85,9 +86,6 @@ public class Profile extends Fragment {
 
         profileImage = view.findViewById(R.id.profileImage);
         cambiarImagen = view.findViewById(R.id.editImage);
-        txtUsername = view.findViewById(R.id.txtUsernameProfile);
-        postCount = view.findViewById(R.id.postCount);
-        commentCount = view.findViewById(R.id.commentCount);
 
 
         cambiarImagen.setOnClickListener(new View.OnClickListener() {
@@ -116,8 +114,12 @@ public class Profile extends Fragment {
 
                 InputStream inputStream = getContext().getContentResolver().openInputStream(data.getData());
                 UploadTask uploadTask = imagesRef.putStream(inputStream);
-                Toast.makeText(getContext(), "Imagen actualizada", Toast.LENGTH_SHORT).show();
 
+                Glide.with(this)
+                        .load(imagesRef)
+                        .into(profileImage);
+
+                Toast.makeText(getContext(), "Imagen actualizada", Toast.LENGTH_SHORT).show();
 
 
             } catch (FileNotFoundException e) {
